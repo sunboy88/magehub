@@ -1,0 +1,50 @@
+<block output="toHtml" type="core/template" name="set_methods_result" as="set_methods_result" template="onestepcheckout/set_methods_separate.phtml">
+   <block type="onestepcheckout/summary" as="summary" name="onestepcheckout.summary" template="onestepcheckout/summary.phtml">
+      <block type="core/template" as="preview" name="onestepcheckout.summary.preview" template="onestepcheckout/preview/preview.phtml"/>
+   </block>
+   <block type="checkout/onepage_payment_methods" name="choose-payment-method" template="onestepcheckout/payment_method.phtml" as="choose-payment-method">
+      <action method="setMethodFormTemplate">
+         <method>purchaseorder</method>
+         <template>payment/form/purchaseorder.phtml</template>
+      </action>
+   </block>
+</block>
+<reference name="top.links">
+   <action method="addLink" translate="label title" module="customer">
+      <label>Log In</label>
+      <url helper="customer/getLoginUrl"/>
+      <title>Log In</title>
+      <prepare/>
+      <urlParams/>
+      <position>100</position>
+   </action>
+</reference>
+<remove name="reorder"/>
+<reference name="right">
+   <block type="sales/reorder_sidebar" name="sale.reorder.sidebar" as="reorder" template="sales/reorder/sidebar.phtml"/>
+</reference>
+<reference name="after_body_start">
+   <block type="core/template" name="gomage.social.config" template="gomage/social/config.phtml"/>
+</reference>
+<block type="gomage_social/login" name="gomage.social.fast.links">
+   <action method="setPlace">
+      <place>fast_links</place>
+   </action>
+   <action method="setPosition">
+      <position>1000</position>
+   </action>
+   <action method="setUsedList">
+      <used_list>1</used_list>
+   </action>
+</block>
+<reference name="top.links">
+   <action ifconfig="gomage_social/general/enable" method="addLinkBlock">
+      <blockName>gomage.social.fast.links</blockName>
+   </action>
+</reference>
+<reference name="head">
+   <action method="addItem">
+      <type>skin_css</type>
+      <name>css/gomage/social.css</name>
+   </action>
+</reference>

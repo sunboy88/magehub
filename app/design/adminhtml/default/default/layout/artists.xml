@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+        <reference name="head">
+            <action method="setCanLoadExtJs">
+                <flag>1</flag>
+            </action>
+            <action method="addJs">
+                <script>artist/tablerowadd.js</script>
+            </action>
+            <action method="addJs">
+                <script>mage/adminhtml/variables.js</script>
+            </action>
+            <action method="addJs">
+                <script>mage/adminhtml/wysiwyg/widget.js</script>
+            </action>
+            <action method="addJs">
+                <script>lib/flex.js</script>
+            </action>
+            <action method="addJs">
+                <script>lib/FABridge.js</script>
+            </action>
+            <action method="addJs">
+                <script>mage/adminhtml/flexuploader.js</script>
+            </action>
+            <action method="addJs">
+                <script>mage/adminhtml/browser.js</script>
+            </action>
+            <action method="addJs">
+                <script>prototype/window.js</script>
+            </action>
+            <action method="addItem">
+                <type>js_css</type>
+                <name>prototype/windows/themes/default.css</name>
+            </action>
+            <action method="addItem">
+                <type>js_css</type>
+                <name>prototype/windows/themes/magento.css</name>
+            </action>
+        </reference>
+    </default>
+    
+    <artists_adminhtml_artists_index>
+        <reference name="content">
+            <block type="artists/adminhtml_artists" name="artists" />
+        </reference>
+    </artists_adminhtml_artists_index>
+
+    <artists_adminhtml_artists_images>
+        <reference name="content">
+            <block type="artists/adminhtml_images" name="images" />
+        </reference>
+    </artists_adminhtml_artists_images>
+
+    <artists_adminhtml_apply_preview>
+        <reference name="content">
+            <block type="artists/adminhtml_preview" name="preview" />
+        </reference>
+    </artists_adminhtml_apply_preview>
+  
+    <artists_adminhtml_category_index>
+        <reference name="content">
+            <block type="artists/adminhtml_category" name="category" />
+        </reference>
+    </artists_adminhtml_category_index>
+
+    <artists_adminhtml_apply_index>
+        <reference name="content">
+            <block type="artists/adminhtml_apply" name="apply" />
+        </reference>
+    </artists_adminhtml_apply_index>
+  
+    <artists_adminhtml_featured_index>
+        <reference name="content">
+            <block type="artists/adminhtml_featured" name="featured" />
+        </reference>
+    </artists_adminhtml_featured_index>
+  
+    <artists_adminhtml_featuredartists_index>
+        <reference name="content">
+            <block type="artists/adminhtml_featuredartists" name="featuredartists" />
+        </reference>
+    </artists_adminhtml_featuredartists_index>
+
+
+    <artists_adminhtml_featured_artist>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="artists/adminhtml_featured_edit_tab_artist" name="adminhtml.featured.edit.tab.artist"/>
+            
+            <block type="adminhtml/widget_grid_serializer" name="featured_grid_serializer">
+                <reference name="featured_grid_serializer">
+                    <action method="initSerializerBlock">
+                        <grid_block_name>adminhtml.featured.edit.tab.artist</grid_block_name>
+                        <data_callback>getSelectedArtists</data_callback>
+                        <hidden_input_name>links[artists]</hidden_input_name>
+                        <reload_param_name>artists</reload_param_name>
+                    </action>
+                    <action method="addColumnInputName">
+                        <input_name>position</input_name>
+                    </action>
+                </reference>
+            </block>
+            
+        </block>
+    </artists_adminhtml_featured_artist>
+    
+</layout > 
