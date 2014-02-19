@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<config>
-    <modules>
-        <Evatix_Artists>
-            <active>true</active>
-            <codePool>local</codePool>
-        </Evatix_Artists>
-    </modules>
-</config>

@@ -1,7 +1,0 @@
-<?php $banners = $this->getBannerList(); ?>
-
-    <?php foreach ($banners as $banner): ?>
-            <a href="<?php echo $banner->getLink(); ?>" title="<?php echo $banner->getTitle(); ?>">
-                <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . 'banner/' . $banner->getImage(); ?>" alt="<?php echo $banner->getTitle(); ?>" />
-             </a>
-    <?php endforeach; ?>
