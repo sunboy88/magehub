@@ -1,0 +1,25 @@
+<?php $sliders = $this->getSliderist(); ?>
+<script type="text/javascript" src="<?php echo $this->getJsUrl('artist/mycarousel/jquery.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo $this->getJsUrl('artist/mycarousel/jcarousel.js'); ?>"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->getJsUrl('artist/mycarousel/mycarousel.css'); ?>">
+<script type="text/javascript">
+jQuery.noConflict();
+jQuery(document).ready(function() {
+    jQuery('#mycarousel').jcarousel();
+});
+</script>
+
+
+<div id="slider-wrapper">
+    <div id="slider">
+        <ul>
+            <?php foreach ($sliders as $_slider): ?>
+                <li style="display:none">
+                    <a href="<?php echo Mage::getUrl('artists/index/index').'id'.$_slider['artists_id']; ?>" title="<?php echo $banner->getTitle(); ?>">
+                        <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . 'banner/' . $banner->getImage(); ?>" alt="<?php echo $banner->getTitle(); ?>" />
+                     </a>
+               </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</div>

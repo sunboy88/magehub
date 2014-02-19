@@ -1,0 +1,124 @@
+<?php $jsUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS); ?>
+<!--link rel="stylesheet" type="text/css" href="<?php echo $jsUrl.'banner/orbit-1.2.3.css'; ?>" />
+<script type="text/javascript" src="<?php echo $jsUrl.'banner/jquery.orbit-1.2.3.min.js'; ?>"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function() {  
+        jQuery('#featured').orbit({
+            animation: 'fade', // fade, horizontal-slide, vertical-slide, horizontal-push
+            animationSpeed: 600, // how fast animtions are
+            timer: true, // true or false to have the timer
+            advanceSpeed: 4000, // if timer is enabled, time between transitions
+            pauseOnHover: false, // if you hover pauses the slider
+            startClockOnMouseOut: true, // if clock should start on MouseOut
+            startClockOnMouseOutAfter: 1000, // how long after MouseOut should the timer start again
+            directionalNav: true, // manual advancing directional navs
+            captions: true, // do you want captions?
+            captionAnimation: 'fade', // fade, slideOpen, none
+            captionAnimationSpeed: 600, // if so how quickly should they animate in
+            bullets: true, // true or false to activate the bullet navigation
+            bulletThumbs: false, // thumbnails for the bullets
+            bulletThumbLocation: '', // location from this file where thumbs will be
+			afterSlideChange: function(){} 	 // empty function 
+        });
+                                
+    });
+</script-->
+
+<!-- Attach our CSS -->
+<link rel="stylesheet" type="text/css" href="<?php echo $jsUrl.'banner/orbit-1.2.3.css'; ?>" />
+<!-- Attach necessary JS -->
+<script type="text/javascript" src="<?php echo $jsUrl.'banner/newbanner/jquery-1.7.1.js'; ?>"></script>
+<script type="text/javascript" src="<?php echo $jsUrl.'banner/newbanner/jquery.orbit-1.2.3.min.js'; ?>"></script>	
+<!-- Run the plugin -->
+<script type="text/javascript">
+	jQuery(window).load(function() {
+		jQuery('#featured').orbit({
+            animation: 'fade', // fade, horizontal-slide, vertical-slide, horizontal-push
+            animationSpeed: 600, // how fast animtions are
+            timer: true, // true or false to have the timer
+            advanceSpeed: 4000, // if timer is enabled, time between transitions
+            pauseOnHover: false, // if you hover pauses the slider
+            startClockOnMouseOut: true, // if clock should start on MouseOut
+            startClockOnMouseOutAfter: 1000, // how long after MouseOut should the timer start again
+            directionalNav: true, // manual advancing directional navs
+            captions: true, // do you want captions?
+            captionAnimation: 'fade', // fade, slideOpen, none
+            captionAnimationSpeed: 600, // if so how quickly should they animate in
+            bullets: true, // true or false to activate the bullet navigation
+            bulletThumbs: false, // thumbnails for the bullets
+            bulletThumbLocation: '', // location from this file where thumbs will be
+			afterSlideChange: function(){} 	 // empty function 
+        });
+	});
+</script>
+
+<div id="slider-wrapper" style="margin-left: -46px;margin-top: -18px;margin-bottom: 36px;">
+    <div id="featured">
+        <?php //echo $bannerHtml; ?>
+        <?php echo $this->getLayout()->createBlock('banner/banner')->setTemplate('banner/banner.phtml')->toHtml(); ?>   
+    </div>
+</div>
+
+<div class="clearfix">
+	<div class="itemboxWrap">
+
+            <?php
+            $collection = $this->getArtistList();
+            $artistList = $collection->getData();
+            
+            $_iterate = 0;
+            $columnCount = 3;
+            
+            if ($_category = Mage::registry('artist_category')): ?>
+                <?php $cat = $_category->getData();
+                $model = Mage::getModel('artists/category')->load(Mage::app()->getRequest()->getParam('id', 0));
+                 ?>
+                <h2><?php echo $model->getCategoryName(); ?></h2>
+                <?php if ($artistList) : ?>
+                <div class="boxWrap clearfix">
+                <?php
+                foreach($artistList as $_artist) :
+                    $url = Mage::getUrl('artists/index/view').'id/'.$_artist['artists_id'];
+                    $mediaUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);
+                    $resize = Mage::getModel('artists/resize');
+                    $resize->setImagePath('artists');
+                    $resize->setImageName($_artist['image']);
+                    $thumbnail = $resize->getResizedUrl(259, 114);
+                    
+                    /*
+                    if ($_artist['thumbnail']) {
+                        $thumbnail = $mediaUrl.$_artist['thumbnail'];
+                    } else {
+                        $thumbnailImage = Mage::getStoreConfig('catalog/placeholder/thumbnail_placeholder');
+                        if ($thumbnailImage) {
+                            $thumbnail = $mediaUrl.'catalog/product/placeholder/'.$thumbnailImage;
+                        } else {
+                            $thumbnail = Mage::getDesign()->getSkinUrl('images/catalog/product/placeholder/thumbnail.jpg');
+                        }
+                    }
+                    */
+                    
+                ?>
+                    <div class="box <?php if ($_iterate++==0) echo 'first'; ?>">
+                        <h3><?php echo $_artist['title']; ?></h3>
+                        <div class="imagebox">
+                            <a href="<?php echo $url; ?>">
+                                <img src="<?php echo $thumbnail; ?>" alt="" />
+                           </a>
+                       </div>
+                       <div class="textbox">
+                           <?php echo $_artist['name']; ?>
+                       </div>
+                       <a class="link" href="<?php echo $url; ?>">View Now</a>
+                    </div>
+                    <?php if ($_iterate%$columnCount == 0):
+                        $_iterate = 0;
+                     ?>
+                        </div><div class="boxWrap clearfix">
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
+            <?php  endif;
+            endif; ?>
+    </div>
+</div>

@@ -1,0 +1,91 @@
+<?php $jsUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS); ?>
+<link rel="stylesheet" type="text/css" href="<?php echo $jsUrl.'banner/bannerslider.css'; ?>" />
+<script type="text/javascript" src="<?php echo $jsUrl.'banner/slider.js'; ?>"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        jQuery("#artist_slider").easySlider({
+            auto: true,
+            continuous: true,
+            numeric: true
+        });
+    });
+</script>
+
+<style>
+
+#innerModulelist {
+    
+    background: none;
+    margin: 0;
+}
+
+#modulelistOuter, .jcarousel-skin-tango {
+    
+    background: none;
+}
+
+#containerTop {
+    
+    padding: 0 10px;
+    width: auto;
+}
+</style>
+
+<?php
+$categoryList = $this->getArtistCategory();
+$columnCount = 3;
+if ($categoryList->count()) :
+   $bannerHtml = '<ul>';
+   $listHtml = '';
+   $i = 1;
+   foreach($categoryList as $_category) :
+   
+        $class = '';
+        if($i%$columnCount==0){
+            $class = ' last';
+        }
+   
+        $mediaUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);
+        $url = Mage::getUrl('artists/index/list').'id/'.$_category->getId();
+        $image = explode('/', $_category->getThumbnail());
+        $resize = Mage::getModel('artists/resize');
+        $resize->setImagePath('artists/category');
+        $resize->setImageName($image[count($image)-1]);
+        $thumbnail = $resize->getResizedUrl(232, 115);
+
+        $listHtml .= '<div class="moduletable'.$class.'">
+                          <h3>'.$_category->getCategoryName().'</h3>';
+        $listHtml .= '<div class="imagebox">
+                         <a href="'.$url.'">'.
+                             '<img src="'.$thumbnail.'" alt="'.$_category->getCategoryName().'" width="232" height="115" />'
+                         .'</a>
+                      </div>';
+        $listHtml .= '<p>'.substr($_category->getContent(), 0, 200).'</p>';
+        $listHtml .= '<a href="'.$url.'" class="link">view Now</a>
+        
+        </div>';
+   
+        $bannerHtml .= '<li style="width:1030px;text-align:center;">
+                            <a href="'.$url.'">'
+                                .'<img src="'.$mediaUrl.$_category->getMainImage().'" alt="'.$_category->getCategoryName().'" width="1030" height="376" />'.
+                            '</a>
+
+                        </li>';
+        $i++;
+    endforeach;
+    $bannerHtml .= '';
+endif;
+?>
+<div id="slider-wrapper">
+    <div id="artist_slider">
+        <?php echo $bannerHtml; ?>
+    </div>
+</div>
+
+<div id="modulelistOuter">
+    <div id="innerModulelist">
+        <div class="moduleWrap clearfix">
+            <?php echo $listHtml; ?>
+        </div>
+    </div>
+</div>

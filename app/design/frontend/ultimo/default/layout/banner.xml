@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+        <reference name="head">
+            <action method="addItem">
+                <type>js_css</type>
+                <name>banner/bannerslider.css</name>
+                <params/>
+            </action>
+            <action method="addItem">
+                <type>js</type>
+                <name>banner/jquery.latest.js</name>
+            </action>
+            <action method="addItem">
+                <type>js</type>
+                <name>banner/slider.js</name>
+            </action>
+            <action method="addItem">
+                <type>js</type>
+                <name>banner/jcarousel.js</name>
+            </action>
+            <action method="addItem">
+                <type>js</type>
+                <name>banner/custom.js</name>
+            </action>
+        </reference>
+    </default>
+</layout > 

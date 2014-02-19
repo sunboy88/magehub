@@ -1,0 +1,14 @@
+<?php $banners = $this->getBannerList(); ?>
+<div id="slider-wrapper">
+    <div id="slider">
+        <ul>
+            <?php foreach ($banners as $banner): ?>
+                <li>
+                    <a href="<?php echo $banner->getLink(); ?>" title="<?php echo $banner->getTitle(); ?>">
+                        <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . 'banner/' . $banner->getImage(); ?>" alt="<?php echo $banner->getTitle(); ?>" />
+                     </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</div>

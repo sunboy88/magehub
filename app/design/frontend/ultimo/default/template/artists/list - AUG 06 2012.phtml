@@ -1,0 +1,52 @@
+<div class="clearfix">
+	<div class="itemboxWrap">
+            <div id="messages_product_view">
+                <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+            </div>
+
+            <?php
+            $collection = $this->getArtistList();
+            $artistList = $collection->getData();
+            
+            $_iterate = 0;
+            $columnCount = 3;
+            
+            if ($_category = Mage::registry('artist_category')): ?>
+                <?php $cat = $_category->getData();
+                $model = Mage::getModel('artists/category')->load(Mage::app()->getRequest()->getParam('id', 0));
+                 ?>
+                <h2><?php echo $model->getCategoryName(); ?></h2>
+                <?php if ($artistList) : ?>
+                <div class="boxWrap clearfix">
+                <?php
+                foreach($artistList as $_artist) :
+                    $url = Mage::getUrl('artists/index/view').'id/'.$_artist['artists_id'];
+                    $mediaUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);
+                    $resize = Mage::getModel('artists/resize');
+                    $resize->setImagePath('artists');
+                    $resize->setImageName($_artist['image']);
+                    $thumbnail = $resize->getResizedUrl(259, 114);
+                ?>
+                    <div class="box <?php if ($_iterate++==0) echo 'first'; ?>">
+                        <h3><?php echo $_artist['title']; ?></h3>
+                        <div class="imagebox">
+                            <a href="<?php echo $url; ?>">
+                                <img src="<?php echo $thumbnail; ?>" width="259" height="114" alt="" />
+                           </a>
+                       </div>
+                       <div class="textbox">
+                           <?php echo $_artist['name']; ?>
+                       </div>
+                       <a class="link" href="<?php echo $url; ?>">View Now</a>
+                    </div>
+                    <?php if ($_iterate%$columnCount == 0):
+                        $_iterate = 0;
+                     ?>
+                        </div><div class="boxWrap clearfix">
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
+            <?php  endif;
+            endif; ?>
+    </div>
+</div>

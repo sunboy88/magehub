@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<config>
+	<modules>
+		<EW_Backgrounder>
+			<version>1.1.0</version>
+		</EW_Backgrounder>
+	</modules>	
+	<blocks>
+            <backgrounder><class>EW_Backgrounder_Block</class></backgrounder>
+        </blocks>
+	<frontend>
+		<layout>
+                        <updates>
+                                <backgrounder>
+                                        <file>backgrounder.xml</file>
+                                </backgrounder>
+                        </updates>
+                </layout>
+	</frontend>
+     <adminhtml>	    
+		<acl>
+			<resources>
+				<all>
+					<title>Allow Everything</title>
+				</all>
+				<admin>
+					<children>
+						<backgrounder>
+							<title>EW Backgrounder</title>
+							<sort_order>200</sort_order>
+						</backgrounder>
+					</children>
+				</admin>
+			</resources>
+		</acl>
+		
+	
+    </adminhtml>
+    <global>	
+		 <blocks>
+		
+            <backgrounder><class>EW_Backgrounder_Block</class></backgrounder>
+        
+		    <adminhtml>
+			  <rewrite>
+					<catalog_category_tabs>EW_Backgrounder_Block_Rewrite_Categorytabs</catalog_category_tabs>
+			  </rewrite>
+			  
+		    </adminhtml>
+	    </blocks>         
+	    <models>
+		    <backgrounder>
+			    <class>EW_Backgrounder_Model</class>
+			    <resourceModel>backgrounder_mysql4</resourceModel>
+		    </backgrounder> 
+                    <backgrounder_mysql4>
+			    <class>EW_Backgrounder_Model_Mysql4</class>
+                                <entities>
+                                    <backgrounds>
+                                        <table>ew_backgrounder_backgrounds</table>
+                                    </backgrounds>                                                                                                          
+                                </entities>
+		    </backgrounder_mysql4>                    
+            </models>
+            <resources>
+                <backgrounder_setup>
+                    <setup>
+                            <module>EW_Backgrounder</module>
+                    </setup>
+                    <connection>
+                            <use>core_setup</use>
+                    </connection>
+                </backgrounder_setup>
+                <backgrounder_write>
+                    <connection><use>core_write</use></connection>
+                </backgrounder_write>
+                <backgrounder_read>
+                    <connection><use>core_read</use></connection>
+                </backgrounder_read>
+            </resources>
+	    <helpers>
+		    <backgrounder>
+			    <class>EW_Backgrounder_Helper</class>
+		    </backgrounder>
+	    </helpers>   
+		<events>
+			<catalog_category_prepare_save>
+				<observers> 
+                    <bgcat>
+                        <class>backgrounder/observer</class>
+                        <method>catRender</method>
+                    </bgcat>
+                </observers>
+			</catalog_category_prepare_save>
+        </events>	
+    </global>
+	
+</config>
+

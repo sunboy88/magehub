@@ -1,0 +1,194 @@
+<?php
+
+class Evatix_Artists_IndexController extends Mage_Core_Controller_Front_Action {
+
+    /**
+     * Show Artist List based on a Artist Category
+     */
+    public function indexAction() {
+        $this->loadLayout();
+        $this->renderLayout();
+    }
+
+    public function listAction() {
+        $id = $this->getRequest()->getParam('id', 0);
+        if (!$id) {
+            Mage::getSingleton('customer/session')->addError(Mage::helper('artists')->__('Unable to find artist category'));
+        }
+        $this->loadLayout();
+        $this->renderLayout();
+    }
+
+    /**
+     * Show Featured Artist List
+     */
+    public function featuredAction() {
+        $this->loadLayout();
+        $this->renderLayout();
+    }
+
+    /**
+     * Show Featured Artist List
+     */
+    public function applyAction() {
+        $this->loadLayout();
+        /** For Calander * */
+        $blockCal = $this->getLayout()->createBlock(
+                        'Mage_Core_Block_Html_Calendar',
+                        'html_calendar',
+                        array('template' => 'page/js/calendar.phtml')
+        );
+        $this->getLayout()->getBlock('content')->append($blockCal);
+
+        $this->_initLayoutMessages('customer/session');
+        $this->_initLayoutMessages('catalog/session');
+        
+        /** For Calander * */
+        $this->getLayout()->getBlock('artist_apply')
+                ->setFormAction(Mage::getUrl('*/*/post'));
+        $this->renderLayout();
+    }
+
+    protected function _sendEmail($data = array()) {
+        try {
+            $model = Mage::getModel('artists/configaration')->getCollection();
+            $configInfo = $model->getData();
+            if ($configInfo) {
+                $mail = new Zend_Mail();
+                $mail->setBodyText('Request For Add Artist Information');
+                $mail->setFrom($data['contact_email'], $data['contact_name']);
+                $mail->addTo($configInfo[0]['admin_email'], '');
+                $mail->setSubject($configInfo[0]['page_title']);
+                $mail->send();
+            }
+        } catch (Exception $ex) {
+            
+        }
+        return true;
+    }
+
+    public function postAction() {
+        $post = $this->getRequest()->getPost();
+        
+        if ($post) {
+            /** Filter Post data * */
+            $this->filterPostData($post);
+            /** Process Filter Data For Validation * */
+            $data = $this->processPostData($post);
+
+            if ($this->validatePostData($data)) {
+                 Mage::getSingleton('customer/session')->addError(Mage::helper('artists')->__('Please enter valid data'));
+                 return;
+            }
+
+            try {
+                /** Save Apply Information * */
+                $model = Mage::getModel('artists/apply');
+                $model->setData($data);
+                if ($model->save()) {
+                    $this->_sendEmail($data);
+                }
+
+                Mage::getSingleton('customer/session')->addSuccess(Mage::helper('artists')->__('Thanks for your submission.'));
+                $this->_redirect('*/*/apply');
+                return;
+            } catch (Exception $ex) {
+                Mage::getSingleton('customer/session')->addError(Mage::helper('artists')->__('Unable to submit your request. Please, try again later'));
+                $this->_redirect('*/*/apply');
+                return;
+            }
+        } else {
+            $this->_redirect('*/*/apply');
+        }
+    }
+
+    /**
+     * Filter Post Data
+     * @param array $post
+     * @return  void
+     */
+    private function filterPostData(&$post = array()) {
+        foreach ($post as $key => $value) {
+            $post[$key] = trim(strip_tags($value));
+        }
+    }
+
+    /**
+     * Process Post data from Apply form for save
+     * @param   array $post
+     * @return  array $data
+     */
+    private function processPostData($post = array()) {
+        $data = array(
+            'contact_name' => $post['contact-name'],
+            'address' => $post['address'],
+            'city' => $post['city'],
+            'state' => $post['state'],
+            'zip_code' => $post['zip_code'],
+            'phone' => $post['phone'],
+            'contact_email' => $post['contact-email'],
+            'band' => $post['band'],
+            'website' => $post['website'],
+            'years' => intval($post['years']),
+            'band2' => $post['band2'],
+            'tours' => $post['tours'],
+            'tv' => $post['tv'],
+            'video' => $post['video'],
+            'record' => $post['record'],
+            'labelcontact' => $post['labelcontact'],
+            'labelphone' => $post['labelphone'],
+            'labelsite' => $post['labelsite'],
+            'current' => $post['current'],
+            'release' => $post['release'],
+            'sold' => intval($post['sold']),
+            'previous' => $post['previous'],
+            'management' => $post['management'],
+            'managementperson' => $post['managementperson'],
+            'managementcontact' => $post['managementcontact'],
+            'managementwebsite' => $post['managementwebsite'],
+            'referred' => $post['referred'],
+            'drum' => $post['drum'],
+            'contract' => $post['contract'],
+            'deal' => $post['deal'],
+            'drumkit' => $post['drumkit'],
+            'comments' => $post['comments']
+        );
+        return $data;
+    }
+
+    /**
+     * Validate Post
+     * @param array $post
+     * @return boolean
+     */
+    private function validatePostData($post = array()) {
+        $requiredField = array(
+            'contact_name', 'address', 'city', 'state',
+            'phone', 'contact_email', 'band'
+        );
+        $error = false;
+        foreach ($requiredField as $value) {
+            if (!Zend_Validate::is($post[$value], 'NotEmpty')) {
+                $error = true;
+            }
+        }
+
+        if (!Zend_Validate::is($post['contact_email'], 'EmailAddress')) {
+            $error = true;
+        }
+        return $error;
+    }
+
+    /**
+     * Show Artist Details Information
+     */
+    public function viewAction() {
+        $id = $this->getRequest()->getParam('id', 0);
+        if (!$id) {
+            Mage::getSingleton('customer/session')->addError(Mage::helper('artists')->__('Unable to find artist'));
+        }
+        $this->loadLayout();
+        $this->renderLayout();
+    }
+
+}
